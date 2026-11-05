@@ -16,9 +16,10 @@
   --panel: rgba(8, 25, 41, 0.8);
   --panel-solid: #0a1e31;
   --border: rgba(227, 182, 100, 0.22);
-  --font-display: "Cormorant Unicase", "Times New Roman", serif;
-  --font-body: "Nunito", system-ui, -apple-system, sans-serif;
-  --font-mono: "Spline Sans Mono", ui-monospace, "Courier New", monospace;
+  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  --font-body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", "Cascadia Code", "Roboto Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  color-scheme: dark;
 }
 
 *,
@@ -1873,4 +1874,185 @@ kbd {
   .beast {
     animation: none;
   }
+}
+
+/* Tema claro — a versão diurna do grimório */
+[data-theme="light"] {
+  color-scheme: light;
+  scrollbar-color: var(--gold-dim) var(--deep);
+  --ink: #2b2418;
+  --ink-2: #3a3020;
+  --ink-3: #4c402a;
+  --deep: #efe6d2;
+  --parchment: #24303c;
+  --parchment-soft: rgba(36, 48, 60, 0.78);
+  --parchment-dim: rgba(36, 48, 60, 0.52);
+  --gold: #9a6b1d;
+  --gold-bright: #7c5412;
+  --gold-dim: rgba(154, 107, 29, 0.3);
+  --rune: #1a7a62;
+  --rune-dim: rgba(26, 122, 98, 0.14);
+  --ember: #b44528;
+  --ember-dim: rgba(180, 69, 40, 0.14);
+  --panel: rgba(255, 251, 242, 0.84);
+  --panel-solid: #fbf5e8;
+  --border: rgba(154, 107, 29, 0.3);
+}
+
+[data-theme="light"] .sky {
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(255, 248, 232, 0.95) 0%, rgba(239, 230, 210, 0) 60%),
+    radial-gradient(80% 60% at 85% 15%, rgba(26, 122, 98, 0.08) 0%, rgba(239, 230, 210, 0) 55%),
+    linear-gradient(180deg, #f7efdd 0%, #efe6d2 45%, #e4d7bd 100%);
+}
+
+[data-theme="light"] .sky__aurora {
+  opacity: 0.55;
+}
+
+[data-theme="light"] .sky__ridge path:first-child {
+  fill: rgba(164, 143, 110, 0.22);
+}
+
+[data-theme="light"] .sky__ridge path:last-child {
+  fill: rgba(140, 118, 85, 0.32);
+}
+
+[data-theme="light"] .sky__orbit circle[stroke],
+[data-theme="light"] .sky__orbit path {
+  stroke: rgba(154, 107, 29, 0.2);
+}
+
+[data-theme="light"] .sky__orbit circle:not([fill="none"]) {
+  fill: rgba(154, 107, 29, 0.06);
+}
+
+[data-theme="light"] .star {
+  background: #b98a33;
+}
+
+[data-theme="light"] .star--cross {
+  color: #b98a33 !important;
+}
+
+[data-theme="light"] .btn--ghost {
+  background: rgba(36, 48, 60, 0.04);
+  border-color: rgba(36, 48, 60, 0.22);
+}
+
+[data-theme="light"] .btn--ghost:hover {
+  background: rgba(36, 48, 60, 0.07);
+  border-color: var(--gold-dim);
+}
+
+[data-theme="light"] .btn--icon {
+  background: rgba(36, 48, 60, 0.03);
+  border-color: rgba(36, 48, 60, 0.2);
+}
+
+[data-theme="light"] .chip {
+  background: rgba(36, 48, 60, 0.04);
+}
+
+[data-theme="light"] .chip--button:hover {
+  background: rgba(36, 48, 60, 0.08);
+}
+
+[data-theme="light"] .year-card {
+  background:
+    radial-gradient(120% 100% at 0% 0%, rgba(26, 122, 98, 0.08), transparent 55%),
+    rgba(255, 251, 242, 0.88);
+}
+
+[data-theme="light"] .year-card:hover {
+  background:
+    radial-gradient(120% 100% at 0% 0%, rgba(26, 122, 98, 0.13), transparent 55%),
+    rgba(255, 253, 247, 0.97);
+}
+
+[data-theme="light"] .xp {
+  background: rgba(36, 48, 60, 0.12);
+  border-color: rgba(36, 48, 60, 0.18);
+}
+
+[data-theme="light"] .journey {
+  background:
+    radial-gradient(60% 80% at 20% 30%, rgba(154, 107, 29, 0.1), transparent 70%),
+    radial-gradient(50% 70% at 80% 70%, rgba(26, 122, 98, 0.08), transparent 70%),
+    rgba(255, 251, 242, 0.75);
+  box-shadow: inset 0 0 80px rgba(154, 107, 29, 0.1);
+}
+
+[data-theme="light"] .journey::before {
+  opacity: 0.3;
+}
+
+[data-theme="light"] .node__ring {
+  background: radial-gradient(circle at 35% 30%, #fffdf8, #eadfc6 70%);
+  color: #4a3a1e;
+}
+
+[data-theme="light"] .node__ring::before {
+  border-color: rgba(74, 58, 30, 0.18);
+}
+
+[data-theme="light"] .meter {
+  background: rgba(36, 48, 60, 0.14);
+  border-color: rgba(36, 48, 60, 0.18);
+}
+
+[data-theme="light"] .battle__top {
+  border-bottom-color: rgba(36, 48, 60, 0.14);
+}
+
+[data-theme="light"] .choice {
+  color: #f3e6c8;
+}
+
+[data-theme="light"] .choice::before {
+  border-color: rgba(243, 230, 200, 0.3);
+  color: rgba(243, 230, 200, 0.6);
+}
+
+[data-theme="light"] .potion {
+  background: rgba(36, 48, 60, 0.05);
+  border-color: rgba(36, 48, 60, 0.2);
+}
+
+[data-theme="light"] .beast__ring {
+  stroke: rgba(36, 48, 60, 0.2);
+}
+
+[data-theme="light"] .overlay__scrim {
+  background: rgba(60, 50, 30, 0.38);
+}
+
+[data-theme="light"] .overlay__card {
+  background:
+    radial-gradient(100% 100% at 50% 0%, rgba(26, 122, 98, 0.08), transparent 55%),
+    linear-gradient(180deg, #fffaf0 0%, #f3e9d4 100%);
+  border-color: rgba(154, 107, 29, 0.4);
+  box-shadow: 0 30px 90px rgba(80, 60, 30, 0.3);
+}
+
+[data-theme="light"] .overlay__stats {
+  background: rgba(154, 107, 29, 0.08);
+  border-color: rgba(36, 48, 60, 0.12);
+}
+
+[data-theme="light"] .review-list li {
+  border-bottom-color: rgba(36, 48, 60, 0.14);
+}
+
+[data-theme="light"] .review-card__stats {
+  border-top-color: rgba(36, 48, 60, 0.12);
+}
+
+[data-theme="light"] .damage-float {
+  text-shadow: 0 2px 12px rgba(255, 255, 255, 0.85);
+}
+
+html.is-fullscreen .app,
+html.is-standalone .app {
+  width: min(1400px, 100%);
 }

@@ -2,6 +2,15 @@
   "use strict";
 
   const STORAGE_KEY = "grimorio-dos-numeros-v1";
+  const PORTAL_THEME_KEY = "theme";
+
+  function postToPortal(message) {
+    try {
+      window.parent.postMessage(message, "*");
+    } catch (error) {
+      // Sem portal: o jogo continua funcionando sozinho.
+    }
+  }
 
   const GRADES = [
     { id: 1, label: "1º ano", skills: "Somas e subtrações até 20", blurb: "Contas pequenas, grandes descobertas." },
@@ -680,6 +689,8 @@
     battle = {
       stageIndex,
       stage,
+      startedAt: Date.now(),
+      reported: false,
       enemyMaxHp: stage.hp,
       enemyHp: stage.hp,
       playerMaxHp: maxHp,
@@ -939,6 +950,34 @@
     setTimeout(() => float.remove(), 1000);
   }
 
+  function reportFinish({ win, xpGained = 0 }) {
+    if (!battle || battle.reported) return;
+    battle.reported = true;
+
+    const attempts = battle.correct + battle.wrong;
+    const accuracy = Math.round((battle.correct / Math.max(1, attempts)) * 100);
+
+    postToPortal({
+      type: "vrgame:finish",
+      score: battle.correct,
+      maxScore: Math.max(1, attempts),
+      timeMs: Date.now() - battle.startedAt,
+      detail: {
+        mode: "battle",
+        result: win ? "win" : "lose",
+        grade: profile.grade,
+        stage: battle.stageIndex + 1,
+        stageName: battle.stage.name,
+        correct: battle.correct,
+        wrong: battle.wrong,
+        accuracy,
+        xpGained,
+        level: profile.level,
+        campaignComplete: win && battle.stageIndex === STAGES.length - 1
+      }
+    });
+  }
+
   function winBattle() {
     battle.over = true;
     battle.locked = true;
@@ -958,6 +997,7 @@
     }
     profile.unlocked = Math.max(profile.unlocked, Math.min(STAGES.length + 1, battle.stageIndex + 2));
     saveProfile();
+    reportFinish({ win: true, xpGained });
 
     const leveled = profile.level > previousLevel;
     const isBoss = battle.stageIndex === STAGES.length - 1;
@@ -1007,6 +1047,7 @@
     playSfx("lose");
     clearBattleTimers();
     saveProfile();
+    reportFinish({ win: false });
 
     const accuracy = Math.round((battle.correct / Math.max(1, battle.correct + battle.wrong)) * 100);
     const missed = Object.keys(battle.misses);
@@ -1233,6 +1274,65 @@
       }
     }
   });
+
+  function applyTheme(theme) {
+    if (theme === "dark" || theme === "light") {
+      document.documentElement.dataset.theme = theme;
+    }
+  }
+
+  function preferredTheme() {
+    try {
+      const fromQuery = new URLSearchParams(window.location.search).get("theme");
+      if (fromQuery === "dark" || fromQuery === "light") return fromQuery;
+    } catch (error) {
+      // URLSearchParams indisponível: segue para a próxima opção.
+    }
+
+    try {
+      const saved = window.localStorage.getItem(PORTAL_THEME_KEY);
+      if (saved === "dark" || saved === "light") return saved;
+    } catch (error) {
+      // Armazenamento bloqueado: usa a preferência do sistema.
+    }
+
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+
+  let lastReportedHeight = 0;
+
+  function reportHeight() {
+    const height = Math.ceil(document.body.getBoundingClientRect().height);
+    if (Math.abs(height - lastReportedHeight) < 4) return;
+    lastReportedHeight = height;
+    postToPortal({ type: "vrgame:resize", height });
+  }
+
+  window.addEventListener("message", (event) => {
+    if (!event.data) return;
+    if (event.data.type === "vrgame:theme") applyTheme(event.data.theme);
+    if (event.data.type === "vrgame:fullscreen") {
+      document.documentElement.classList.toggle("is-fullscreen", Boolean(event.data.fullscreen));
+    }
+  });
+
+  window.addEventListener("storage", (event) => {
+    if (event.key === PORTAL_THEME_KEY) applyTheme(event.newValue);
+  });
+
+  window.addEventListener("resize", reportHeight);
+  if ("ResizeObserver" in window) {
+    new ResizeObserver(reportHeight).observe(document.body);
+  }
+  window.requestAnimationFrame(reportHeight);
+
+  applyTheme(preferredTheme());
+
+  if (window.self === window.top) {
+    document.documentElement.classList.add("is-standalone");
+  }
+
+  postToPortal({ type: "vrgame:ready" });
 
   buildStars();
   buildAstrolabe();

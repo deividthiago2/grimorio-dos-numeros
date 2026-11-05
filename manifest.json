@@ -1,0 +1,16 @@
+{
+  "slug": "grimorio-dos-numeros",
+  "title": "O Grimório dos Números",
+  "author": "deividthiago2",
+  "authorClass": "Sem turma",
+  "discipline": "Matemática",
+  "grades": ["1º", "2º", "3º", "4º", "5º", "6º"],
+  "tags": ["matemática", "RPG", "frações", "porcentagem", "números negativos"],
+  "description": "Um RPG de matemática em que cada conta certa é um feitiço contra os guardiões das constelações.",
+  "instructions": "Escolha seu ano, avance pela trilha e responda às contas para derrotar os guardiões. Use as teclas 1–4 ou toque nas respostas.",
+  "duration": 15,
+  "version": "1.0.0",
+  "entry": "index.html",
+  "cover": "cover.svg",
+  "createdAt": "2026-11-05"
+}
