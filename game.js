@@ -13,12 +13,48 @@
   }
 
   const GRADES = [
-    { id: 1, label: "1º ano", skills: "Somas e subtrações até 20", blurb: "Contas pequenas, grandes descobertas." },
-    { id: 2, label: "2º ano", skills: "Até 100, dobro e metade", blurb: "Some, subtraia e descubra os dobros." },
-    { id: 3, label: "3º ano", skills: "Tabuadas e divisão", blurb: "Multiplique, divida e atravesse centenas." },
-    { id: 4, label: "4º ano", skills: "Multiplicação e frações simples", blurb: "Frações de quantidades e contas com vírgula." },
-    { id: 5, label: "5º ano", skills: "Frações, porcentagem e decimais", blurb: "Porcentagens, frações e números decimais." },
-    { id: 6, label: "6º ano", skills: "Porcentagem, negativos e equações", blurb: "Sinais, potências, expressões e incógnitas." }
+    {
+      id: 1,
+      label: "1º ano",
+      skills: "Contando, somando e subtraindo até 20",
+      blurb: "Números pequenos e primeiras contas, como na sala de aula.",
+      levels: ["Somas até 10", "Contas até 20", "Números faltando"]
+    },
+    {
+      id: 2,
+      label: "2º ano",
+      skills: "Números até 100, dobro e metade",
+      blurb: "Some, subtraia e descubra os dobros e as metades.",
+      levels: ["Contas até 50", "Dobro e metade", "Contas até 100"]
+    },
+    {
+      id: 3,
+      label: "3º ano",
+      skills: "Tabuadas e divisão",
+      blurb: "Multiplique e divida com as tabuadas.",
+      levels: ["Tabuadas do 2 ao 5", "Tabuadas até 9", "Divisão e tabuadas"]
+    },
+    {
+      id: 4,
+      label: "4º ano",
+      skills: "Multiplicação, divisão e números decimais",
+      blurb: "Contas maiores e números com vírgula.",
+      levels: ["Multiplicação e divisão", "Divisão e multiplicação", "Números decimais"]
+    },
+    {
+      id: 5,
+      label: "5º ano",
+      skills: "Porcentagem, decimais e multiplicação",
+      blurb: "Porcentagens, vírgula e contas maiores.",
+      levels: ["Porcentagem e decimais", "Números decimais", "Contas combinadas"]
+    },
+    {
+      id: 6,
+      label: "6º ano",
+      skills: "Inteiros, expressões e porcentagem",
+      blurb: "Sinais, expressões e porcentagens.",
+      levels: ["Negativos e porcentagem", "Expressões e negativos", "Expressões e porcentagem"]
+    }
   ];
 
   const STAGES = [
@@ -124,6 +160,7 @@
     battleGrade: $("#battle-grade"),
     battleStage: $("#battle-stage"),
     battleDifficulty: $("#battle-difficulty"),
+    focusTag: $("#focus-tag"),
     enemyArt: $("#enemy-art"),
     enemyName: $("#enemy-name"),
     enemyTitle: $("#enemy-title"),
@@ -297,171 +334,155 @@
   }
 
   function generateFirstGrade(difficulty) {
-    const max = [10, 15, 20][difficulty - 1];
-    if (Math.random() < 0.5) {
-      const a = randomInt(1, max - 1);
-      const b = randomInt(1, max - a);
-      return arithmetic(`${a} + ${b}`, a + b, "Soma");
+    const max = [10, 20, 20][difficulty - 1];
+    const kinds = difficulty === 1 ? ["add"] : difficulty === 2 ? ["add", "sub"] : ["add", "sub", "missing"];
+    const kind = pick(kinds);
+
+    if (kind === "missing") {
+      const total = randomInt(5, max);
+      const a = randomInt(1, total - 1);
+      return createProblem(`${a} + ? = ${total}`, total - a, "Número faltando");
     }
-    const a = randomInt(2, max);
-    const b = randomInt(1, a);
-    return arithmetic(`${a} − ${b}`, a - b, "Subtração");
+
+    if (kind === "sub") {
+      const a = randomInt(2, max);
+      const b = randomInt(1, a);
+      return arithmetic(`${a} − ${b}`, a - b, "Subtração");
+    }
+
+    const a = randomInt(1, max - 1);
+    const b = randomInt(1, max - a);
+    return arithmetic(`${a} + ${b}`, a + b, "Soma");
   }
 
   function generateSecondGrade(difficulty) {
-    const max = [40, 70, 100][difficulty - 1];
-    const kind = pick(["add", "sub", "double", "half", "missing"]);
+    const max = [50, 100, 100][difficulty - 1];
+    const kinds = difficulty === 1
+      ? ["add", "sub"]
+      : difficulty === 2
+        ? ["add", "sub", "double", "half"]
+        : ["add", "sub", "double", "half", "missing"];
+    const kind = pick(kinds);
 
     if (kind === "double") {
-      const n = randomInt(5, [20, 30, 50][difficulty - 1]);
-      return arithmetic(`2 × ${n}`, n * 2, "Dobro e metade");
+      const n = randomInt(2, [15, 25, 40][difficulty - 1]);
+      return createProblem(`Dobro de ${n}`, n * 2, "Dobro");
     }
 
     if (kind === "half") {
-      const n = randomInt(4, [15, 25, 40][difficulty - 1]);
-      return arithmetic(`${n * 2} ÷ 2`, n, "Dobro e metade");
+      const n = randomInt(2, [10, 20, 35][difficulty - 1]);
+      return createProblem(`Metade de ${n * 2}`, n, "Metade");
     }
 
     if (kind === "missing") {
       const total = randomInt(10, max);
       const a = randomInt(2, total - 2);
-      return createProblem(`${a} + ? = ${total}`, total - a, "Números faltando");
+      return createProblem(`${a} + ? = ${total}`, total - a, "Número faltando");
     }
 
-    if (kind === "add") {
-      const a = randomInt(10, max - 10);
-      const b = randomInt(5, max - a);
-      return arithmetic(`${a} + ${b}`, a + b, "Soma");
+    if (kind === "sub") {
+      const a = randomInt(10, max);
+      const b = randomInt(1, a);
+      return arithmetic(`${a} − ${b}`, a - b, "Subtração");
     }
 
-    const a = randomInt(20, max);
-    const b = randomInt(5, a - 1);
-    return arithmetic(`${a} − ${b}`, a - b, "Subtração");
+    const a = randomInt(5, max - 5);
+    const b = randomInt(2, max - a);
+    return arithmetic(`${a} + ${b}`, a + b, "Soma");
   }
 
   function generateThirdGrade(difficulty) {
-    const kind = pick(["multiply", "divide", "add", "sub"]);
-
-    if (kind === "multiply") {
-      const a = randomInt(2, [5, 7, 9][difficulty - 1]);
-      const b = randomInt(2, [6, 8, 10][difficulty - 1]);
-      return arithmetic(`${a} × ${b}`, a * b, "Multiplicação");
-    }
+    const top = [5, 9, 9][difficulty - 1];
+    const kinds = difficulty === 3 ? ["divide", "divide", "multiply"] : ["multiply", "multiply", "divide"];
+    const kind = pick(kinds);
 
     if (kind === "divide") {
-      const b = randomInt(2, [5, 7, 9][difficulty - 1]);
-      const q = randomInt(2, [5, 7, 9][difficulty - 1]);
-      return arithmetic(`${b * q} ÷ ${b}`, q, "Divisão");
+      const divisor = randomInt(2, top);
+      const quotient = randomInt(2, top);
+      return arithmetic(`${divisor * quotient} ÷ ${divisor}`, quotient, "Divisão");
     }
 
-    const max = [500, 800, 999][difficulty - 1];
-    if (kind === "add") {
-      const a = randomInt(100, max - 100);
-      const b = randomInt(100, max - a);
-      return arithmetic(`${a} + ${b}`, a + b, "Soma");
-    }
-    const a = randomInt(200, max);
-    const b = randomInt(100, a - 50);
-    return arithmetic(`${a} − ${b}`, a - b, "Subtração");
+    const a = randomInt(2, top);
+    const b = randomInt(2, top);
+    return arithmetic(`${a} × ${b}`, a * b, "Tabuada");
   }
 
   function generateFourthGrade(difficulty) {
-    const kind = pick(["multiply", "divide", "fraction", "decimal"]);
+    const kinds = difficulty === 1
+      ? ["multiply", "divide"]
+      : difficulty === 2
+        ? ["multiply", "multiply", "divide"]
+        : ["decimal", "multiply", "divide"];
+    const kind = pick(kinds);
 
-    if (kind === "multiply") {
-      const a = randomInt(11, [25, 40, 60][difficulty - 1]);
-      const b = randomInt([3, 4, 6][difficulty - 1], [6, 8, 9][difficulty - 1]);
-      return arithmetic(`${a} × ${b}`, a * b, "Multiplicação");
+    if (kind === "decimal") {
+      const a = randomInt(10, 70) / 10;
+      const b = randomInt(10, 40) / 10;
+      return arithmetic(`${formatNumber(a)} + ${formatNumber(b)}`, roundTo(a + b, 1), "Decimais", { decimal: true });
     }
 
     if (kind === "divide") {
-      const b = randomInt(3, [6, 8, 9][difficulty - 1]);
-      const q = randomInt(3, [12, 20, 30][difficulty - 1]);
-      return arithmetic(`${b * q} ÷ ${b}`, q, "Divisão");
+      const divisor = randomInt(2, 5);
+      const quotient = randomInt(2, 9);
+      return arithmetic(`${divisor * quotient} ÷ ${divisor}`, quotient, "Divisão");
     }
 
-    if (kind === "fraction") {
-      const denominator = pick([2, 3, 4, 5]);
-      const whole = denominator * randomInt(2, [4, 6, 8][difficulty - 1]);
-      return arithmetic(`${1}/${denominator} de ${whole}`, whole / denominator, "Frações");
-    }
-
-    const a = randomInt(11, [25, 50, 70][difficulty - 1]) / 10;
-    const b = randomInt(11, [25, 50, 70][difficulty - 1]) / 10;
-    return arithmetic(`${formatNumber(roundTo(a, 1))} + ${formatNumber(roundTo(b, 1))}`, roundTo(a + b, 1), "Decimais", { decimal: true });
+    const a = randomInt(10, [30, 40, 50][difficulty - 1]);
+    const b = randomInt(2, [5, 7, 9][difficulty - 1]);
+    return arithmetic(`${a} × ${b}`, a * b, "Multiplicação");
   }
 
   function generateFifthGrade(difficulty) {
-    const kind = pick(["percentage", "fraction", "decimal", "multiply"]);
+    const kinds = difficulty === 1
+      ? ["percentage", "decimal"]
+      : difficulty === 2
+        ? ["decimal", "percentage"]
+        : ["percentage", "decimal", "multiply"];
+    const kind = pick(kinds);
 
     if (kind === "percentage") {
-      const percentage = pick([10, 25, 50, 75]);
-      const base = randomInt(2, [6, 10, 14][difficulty - 1]) * 20;
-      return arithmetic(`${percentage}% de ${base}`, (base * percentage) / 100, "Porcentagem");
-    }
-
-    if (kind === "fraction") {
-      const denominator = pick([3, 4, 5]);
-      const numerator = randomInt(1, denominator - 1);
-      const whole = denominator * randomInt(2, [5, 8, 12][difficulty - 1]);
-      return arithmetic(`${numerator}/${denominator} de ${whole}`, (whole * numerator) / denominator, "Frações");
+      const percentage = difficulty === 3 ? pick([20, 25, 75]) : pick([10, 50, 100]);
+      const base = randomInt(2, 10) * 10;
+      return createProblem(`${percentage}% de ${base}`, (base * percentage) / 100, "Porcentagem");
     }
 
     if (kind === "decimal") {
-      const a = randomInt(15, [40, 70, 90][difficulty - 1]) / 10;
-      const b = randomInt(5, [30, 50, 60][difficulty - 1]) / 10;
-      return arithmetic(`${formatNumber(roundTo(a, 1))} + ${formatNumber(roundTo(b, 1))}`, roundTo(a + b, 1), "Decimais", { decimal: true });
+      const a = randomInt(10, 80) / 10;
+      const b = randomInt(10, 50) / 10;
+      return arithmetic(`${formatNumber(a)} + ${formatNumber(b)}`, roundTo(a + b, 1), "Decimais", { decimal: true });
     }
 
-    const a = randomInt(12, [20, 30, 40][difficulty - 1]);
-    const b = randomInt(11, [18, 25, 30][difficulty - 1]);
+    const a = randomInt(11, 20);
+    const b = randomInt(11, 20);
     return arithmetic(`${a} × ${b}`, a * b, "Multiplicação");
   }
 
   function generateSixthGrade(difficulty) {
-    const kind = pick(["percentage", "negative", "equation", "expression", "power", "fraction"]);
-
-    if (kind === "percentage") {
-      const percentage = pick([10, 20, 25, 40, 50, 60, 75, 80]);
-      const base = randomInt(1, [5, 10, 20][difficulty - 1]) * 20;
-      return arithmetic(`${percentage}% de ${base}`, (base * percentage) / 100, "Porcentagem");
-    }
+    const kinds = difficulty === 1
+      ? ["negative", "negative", "percentage"]
+      : difficulty === 2
+        ? ["expression", "expression", "negative"]
+        : ["expression", "negative", "percentage"];
+    const kind = pick(kinds);
 
     if (kind === "negative") {
-      const limit = [9, 15, 25][difficulty - 1];
-      const a = randomInt(-limit, -1);
-      const b = randomInt(1, limit);
+      const a = randomInt(-10, -1);
+      const b = randomInt(1, 10);
       const operation = pick(["+", "−"]);
       const answer = operation === "+" ? a + b : a - b;
       return arithmetic(`${formatNumber(a)} ${operation} ${formatNumber(b)}`, answer, "Números negativos", { allowNegative: true });
     }
 
-    if (kind === "equation") {
-      const x = randomInt(2, [6, 10, 15][difficulty - 1]);
-      if (Math.random() < 0.5) {
-        const a = randomInt(2, [10, 20, 30][difficulty - 1]);
-        return createProblem(`x + ${a} = ${x + a}, x = ?`, x, "Equações");
-      }
-      const a = randomInt(2, [4, 6, 8][difficulty - 1]);
-      return createProblem(`${a}x = ${a * x}, x = ?`, x, "Equações");
+    if (kind === "percentage") {
+      const percentage = pick([10, 20, 50]);
+      const base = randomInt(2, 10) * 10;
+      return createProblem(`${percentage}% de ${base}`, (base * percentage) / 100, "Porcentagem");
     }
 
-    if (kind === "expression") {
-      const a = randomInt(2, 9);
-      const b = randomInt(2, 9);
-      const c = randomInt(2, [4, 6, 8][difficulty - 1]);
-      return arithmetic(`(${a} + ${b}) × ${c}`, (a + b) * c, "Expressões");
-    }
-
-    if (kind === "power") {
-      const n = randomInt(2, [9, 12, 15][difficulty - 1]);
-      return arithmetic(`${n}²`, n * n, "Potências");
-    }
-
-    const denominator = pick([4, 5, 6, 8]);
-    const numerator = randomInt(1, denominator - 1);
-    const whole = denominator * randomInt(2, [5, 10, 15][difficulty - 1]);
-    return arithmetic(`${numerator}/${denominator} de ${whole}`, (whole * numerator) / denominator, "Frações");
+    const a = randomInt(2, 9);
+    const b = randomInt(2, 9);
+    const c = randomInt(2, 5);
+    return arithmetic(`(${a} + ${b}) × ${c}`, (a + b) * c, "Expressões");
   }
 
   function buildStars() {
@@ -550,6 +571,9 @@
         <span class="year-card__year">${grade.label}</span>
         <span class="year-card__skills">${grade.skills}</span>
         <span class="year-card__blurb">${grade.blurb}</span>
+        <span class="year-card__levels">
+          ${grade.levels.map((level, index) => `<span><b>${index + 1}</b> ${level}</span>`).join("")}
+        </span>
       </button>
     `).join("");
   }
@@ -736,7 +760,10 @@
   }
 
   function renderDifficulty() {
+    const topic = gradeInfo(profile.grade).levels[battle.difficulty - 1];
     ui.battleDifficulty.textContent = `Desafio ${battle.difficulty}`;
+    ui.battleDifficulty.title = topic;
+    ui.focusTag.textContent = topic;
   }
 
   function renderEnemyHp() {

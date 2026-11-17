@@ -5,7 +5,7 @@
   "authorClass": "Sem turma",
   "discipline": "Matemática",
   "grades": ["1º", "2º", "3º", "4º", "5º", "6º"],
-  "tags": ["matemática", "RPG", "frações", "porcentagem", "números negativos"],
+  "tags": ["matemática", "RPG", "porcentagem", "números negativos", "decimais"],
   "description": "Um RPG de matemática em que cada conta certa é um feitiço contra os guardiões das constelações.",
   "instructions": "Escolha seu ano, avance pela trilha e responda às contas para derrotar os guardiões. Use as teclas 1–4 ou toque nas respostas.",
   "duration": 15,
