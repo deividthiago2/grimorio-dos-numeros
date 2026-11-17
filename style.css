@@ -319,6 +319,14 @@ h1, h2, h3, p {
   font-style: italic;
 }
 
+.title__credit {
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--parchment-dim);
+  letter-spacing: 0.03em;
+}
+
 .title__art {
   display: grid;
   place-items: center;

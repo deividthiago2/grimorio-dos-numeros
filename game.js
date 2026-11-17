@@ -1357,6 +1357,11 @@
 
   if (window.self === window.top) {
     document.documentElement.classList.add("is-standalone");
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("sw.js").catch(() => {});
+      });
+    }
   }
 
   postToPortal({ type: "vrgame:ready" });

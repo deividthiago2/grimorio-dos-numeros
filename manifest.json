@@ -2,6 +2,7 @@
   "slug": "grimorio-dos-numeros",
   "title": "O Grimório dos Números",
   "author": "deividthiago2",
+  "creators": ["Deivid Thiago", "Gabriel Ferreira Sanches"],
   "authorClass": "Sem turma",
   "discipline": "Matemática",
   "grades": ["1º", "2º", "3º", "4º", "5º", "6º"],

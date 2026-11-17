@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Ícone de O Grimório dos Números">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b2033"/>
+      <stop offset="0.55" stop-color="#071523"/>
+      <stop offset="1" stop-color="#040d17"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#6fe3c4" stop-opacity="0.26"/>
+      <stop offset="1" stop-color="#6fe3c4" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <circle cx="256" cy="256" r="210" fill="url(#glow)"/>
+  <circle cx="256" cy="256" r="188" fill="none" stroke="#e3b664" stroke-opacity="0.5" stroke-width="3"/>
+  <circle cx="256" cy="256" r="154" fill="none" stroke="#e3b664" stroke-opacity="0.24" stroke-width="2" stroke-dasharray="4 12"/>
+  <g fill="#f3e6c8">
+    <circle cx="256" cy="76" r="5" opacity="0.8"/>
+    <circle cx="436" cy="256" r="4" opacity="0.6"/>
+    <circle cx="256" cy="436" r="4" opacity="0.6"/>
+    <circle cx="76" cy="256" r="5" opacity="0.8"/>
+  </g>
+  <path d="M256 98 L284 220 L406 256 L284 292 L256 414 L228 292 L106 256 L228 220 Z" fill="#e3b664"/>
+  <path d="M256 150 L272 240 L362 256 L272 272 L256 362 L240 272 L150 256 L240 240 Z" fill="#ffd98a" opacity="0.55"/>
+  <circle cx="256" cy="256" r="34" fill="#071523"/>
+  <circle cx="256" cy="256" r="18" fill="#6fe3c4"/>
+</svg>

@@ -16,8 +16,17 @@ RPG de matemática para estudantes do 1º ao 6º ano. Cada conta certa é um fei
 - `game.js` — lógica das batalhas, geração das contas, progressão e contrato com o portal.
 - `style.css` — visual do grimório, com temas claro e escuro.
 - `manifest.json` — dados do jogo para o portal.
+- `webmanifest.json`, `sw.js` e `icon*.png/svg` — configuram o web app instalável (PWA) e funcionamento offline.
 - `cover.svg` — capa 16:9.
 - `README.md` — este arquivo.
+
+## Web app
+
+O jogo pode ser instalado como web app. Para isso, sirva a pasta por HTTPS (ou `localhost`) e abra `index.html`: o navegador oferece a opção de instalar pela barra de endereço ou pelo menu. O `sw.js` guarda os arquivos do jogo em cache para que ele continue funcionando sem conexão.
+
+## Créditos
+
+Criação de Deivid Thiago e Gabriel Ferreira Sanches.
 
 ## Contrato com o portal (Jogos VR)
 
@@ -34,6 +43,6 @@ O jogo não usa links externos, bibliotecas da internet nem coleta dados. As fon
 ## Publicar no portal
 
 1. Renomeie a pasta para `grimorio-dos-numeros`, igual ao `slug` do `manifest.json`.
-2. Confira os dados de autor e turma no `manifest.json`.
+2. Confira os dados de autor, criadores e turma no `manifest.json`.
 3. Teste no computador e no celular.
 4. Compacte a pasta em `.zip` e entregue ao professor.
