@@ -1,4 +1,4 @@
-const CACHE_NAME = "grimorio-dos-numeros-v2";
+const CACHE_NAME = "grimorio-dos-numeros-v3";
 const APP_SHELL = [
   "./",
   "./index.html",

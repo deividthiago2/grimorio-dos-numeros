@@ -2,7 +2,7 @@
   "id": "./",
   "name": "O Grimório dos Números",
   "short_name": "Grimório",
-  "description": "RPG de matemática para estudantes do 1º ao 6º ano.",
+  "description": "RPG de matemática para estudantes do 1º ao 9º ano.",
   "lang": "pt-BR",
   "start_url": "index.html",
   "scope": "./",

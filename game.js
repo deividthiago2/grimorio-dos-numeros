@@ -54,6 +54,27 @@
       skills: "Inteiros, expressões e porcentagem",
       blurb: "Sinais, expressões e porcentagens.",
       levels: ["Negativos e porcentagem", "Expressões e negativos", "Expressões e porcentagem"]
+    },
+    {
+      id: 7,
+      label: "7º ano",
+      skills: "Inteiros, frações, regra de três e áreas",
+      blurb: "Sinais, proporções e as primeiras equações.",
+      levels: ["Inteiros e frações", "Razão e porcentagem", "Equações e áreas"]
+    },
+    {
+      id: 8,
+      label: "8º ano",
+      skills: "Potências, raízes, equações e funções",
+      blurb: "Exponentes, radiciais, funções e volume.",
+      levels: ["Potências e raízes", "Equações e funções", "Geometria e probabilidade"]
+    },
+    {
+      id: 9,
+      label: "9º ano",
+      skills: "Equações do 2º grau, progressões e trigonometria",
+      blurb: "Bhaskara, PA e PG, Pitágoras e trigonometria.",
+      levels: ["Equações do 2º grau", "PA, PG e funções", "Trigonometria e volumes"]
     }
   ];
 
@@ -276,6 +297,10 @@
     return text.replace("-", "−");
   }
 
+  function signedTerm(value) {
+    return value < 0 ? `− ${formatNumber(Math.abs(value))}` : `+ ${formatNumber(value)}`;
+  }
+
   function buildChoices(answer, options) {
     const allowNegative = Boolean(options.allowNegative);
     const decimal = Boolean(options.decimal);
@@ -330,7 +355,10 @@
     if (grade === 3) return generateThirdGrade(difficulty);
     if (grade === 4) return generateFourthGrade(difficulty);
     if (grade === 5) return generateFifthGrade(difficulty);
-    return generateSixthGrade(difficulty);
+    if (grade === 6) return generateSixthGrade(difficulty);
+    if (grade === 7) return generateSeventhGrade(difficulty);
+    if (grade === 8) return generateEighthGrade(difficulty);
+    return generateNinthGrade(difficulty);
   }
 
   function generateFirstGrade(difficulty) {
@@ -483,6 +511,194 @@
     const b = randomInt(2, 9);
     const c = randomInt(2, 5);
     return arithmetic(`(${a} + ${b}) × ${c}`, (a + b) * c, "Expressões");
+  }
+
+  function generateSeventhGrade(difficulty) {
+    const kinds = difficulty === 1
+      ? ["integer", "integer", "fraction", "fraction"]
+      : difficulty === 2
+        ? ["integer", "fraction", "rule3", "percentage"]
+        : ["equation", "equation", "area", "area", "rule3"];
+    const kind = pick(kinds);
+
+    if (kind === "integer") {
+      const operation = difficulty === 1 ? pick(["+", "−"]) : pick(["+", "−", "×", "÷"]);
+      if (operation === "×") {
+        const a = randomInt(-9, 9);
+        const b = randomInt(-9, 9);
+        return arithmetic(`${formatNumber(a)} × ${formatNumber(b)}`, a * b, "Números inteiros", { allowNegative: true });
+      }
+      if (operation === "÷") {
+        const divisor = randomInt(2, 9) * pick([-1, 1]);
+        const answer = randomInt(-9, 9);
+        return arithmetic(`${formatNumber(divisor * answer)} ÷ ${formatNumber(divisor)}`, answer, "Números inteiros", { allowNegative: true });
+      }
+      const a = randomInt(-20, 20);
+      const b = randomInt(-15, 15);
+      const answer = operation === "+" ? a + b : a - b;
+      return arithmetic(`${formatNumber(a)} ${operation} ${formatNumber(b)}`, answer, "Números inteiros", { allowNegative: true });
+    }
+
+    if (kind === "fraction") {
+      const denominator = randomInt(2, 6);
+      const numerator = randomInt(1, denominator - 1);
+      const base = randomInt(2, 12) * denominator;
+      return createProblem(`${numerator}/${denominator} de ${base}`, (base * numerator) / denominator, "Frações");
+    }
+
+    if (kind === "rule3") {
+      const unit = randomInt(2, 9);
+      const groups = randomInt(2, 6);
+      const newGroups = randomInt(2, 8);
+      return createProblem(`${groups} cadernos custam R$ ${unit * groups}. Quantos custam ${newGroups}?`, unit * newGroups, "Regra de três");
+    }
+
+    if (kind === "percentage") {
+      const percentage = pick([10, 20, 25, 50, 75]);
+      const base = randomInt(2, 12) * 20;
+      return createProblem(`${percentage}% de ${base}`, (base * percentage) / 100, "Porcentagem");
+    }
+
+    if (kind === "equation") {
+      const answer = randomInt(-8, 12);
+      const a = randomInt(2, 6);
+      const b = randomInt(-9, 9);
+      const total = a * answer + b;
+      return createProblem(`${a}x ${signedTerm(b)} = ${formatNumber(total)}. Qual o valor de x?`, answer, "Equação do 1º grau", { allowNegative: true });
+    }
+
+    if (pick([true, false])) {
+      const base = randomInt(2, 7) * 2;
+      const height = randomInt(3, 10);
+      return createProblem(`Área de um triângulo de base ${base} e altura ${height}`, (base * height) / 2, "Área");
+    }
+
+    const width = randomInt(3, 12);
+    const height = randomInt(3, 12);
+    return createProblem(`Área de um retângulo ${width} por ${height}`, width * height, "Área");
+  }
+
+  function generateEighthGrade(difficulty) {
+    const kinds = difficulty === 1
+      ? ["power", "root", "power", "root"]
+      : difficulty === 2
+        ? ["equation", "function", "scientific", "root"]
+        : ["equation", "function", "probability", "volume"];
+    const kind = pick(kinds);
+
+    if (kind === "power") {
+      const base = randomInt(2, 9);
+      const exponent = randomInt(2, 4);
+      return createProblem(`${base}^${exponent}`, base ** exponent, "Potências");
+    }
+
+    if (kind === "root") {
+      const answer = randomInt(2, 15);
+      if (pick([true, false])) return createProblem(`√${answer ** 2}`, answer, "Raízes");
+      return createProblem(`∛${answer ** 3}`, answer, "Raízes");
+    }
+
+    if (kind === "scientific") {
+      const coefficient = randomInt(2, 9);
+      const exponent = randomInt(3, 5);
+      return createProblem(`${coefficient} × 10^${exponent}`, coefficient * 10 ** exponent, "Notação científica");
+    }
+
+    if (kind === "equation") {
+      const answer = randomInt(-9, 12);
+      const a = randomInt(2, 7);
+      const b = randomInt(1, 12) * pick([-1, 1]);
+      const total = a * answer + b;
+      return createProblem(`${a}x ${signedTerm(b)} = ${formatNumber(total)}. Qual o valor de x?`, answer, "Equação do 1º grau", { allowNegative: true });
+    }
+
+    if (kind === "function") {
+      const a = randomInt(2, 5);
+      const b = randomInt(-8, 8);
+      const x = randomInt(-5, 10);
+      const y = a * x + b;
+      return createProblem(`Se y = ${a}x ${signedTerm(b)} e x = ${formatNumber(x)}, qual é y?`, y, "Função do 1º grau", { allowNegative: true });
+    }
+
+    if (kind === "probability") {
+      const total = randomInt(4, 12) * 2;
+      const favorable = randomInt(1, total - 1);
+      return createProblem(`Em ${total} bolas, ${favorable} são azuis. Chance em %?`, roundTo((favorable / total) * 100, 1), "Probabilidade");
+    }
+
+    const width = randomInt(2, 9);
+    const depth = randomInt(2, 8);
+    const height = randomInt(2, 8);
+    return createProblem(`Volume de uma caixa ${width} × ${depth} × ${height}`, width * depth * height, "Volume");
+  }
+
+  function generateNinthGrade(difficulty) {
+    const kinds = difficulty === 1
+      ? ["quadratic", "roots", "pa", "pythagoras"]
+      : difficulty === 2
+        ? ["quadratic", "pa", "pg", "function"]
+        : ["trigonometry", "pythagoras", "pg", "cylinder"];
+    const kind = pick(kinds);
+
+    if (kind === "quadratic") {
+      const first = randomInt(-6, 8);
+      let second = randomInt(-6, 8);
+      if (second === -first) second = first + 2;
+      const b = -(first + second);
+      const c = first * second;
+      const expression = `x² ${signedTerm(b)}x ${signedTerm(c)} = 0`;
+      const question = pick(["soma", "produto", "delta"]);
+      if (question === "soma") return createProblem(`Soma das raízes de ${expression}`, first + second, "Equação do 2º grau", { allowNegative: true });
+      if (question === "produto") return createProblem(`Produto das raízes de ${expression}`, c, "Equação do 2º grau", { allowNegative: true });
+      return createProblem(`Valor de Δ em ${expression}`, b * b - 4 * c, "Equação do 2º grau");
+    }
+
+    if (kind === "roots") {
+      const first = randomInt(1, 8);
+      const second = randomInt(-6, 7);
+      const b = -(first + second);
+      const c = first * second;
+      return createProblem(`Maior raiz de x² ${signedTerm(b)}x ${signedTerm(c)} = 0`, Math.max(first, second), "Bhaskara");
+    }
+
+    if (kind === "pa") {
+      const first = randomInt(1, 12);
+      const difference = randomInt(2, 6);
+      const position = randomInt(6, 12);
+      return createProblem(`${position}º termo da PA ${first}, ${first + difference}, ${first + 2 * difference}, ...`, first + (position - 1) * difference, "Progressão aritmética");
+    }
+
+    if (kind === "pg") {
+      const first = randomInt(1, 5);
+      const ratio = randomInt(2, 4);
+      const position = randomInt(4, 6);
+      return createProblem(`${position}º termo da PG ${first}, ${first * ratio}, ...`, first * ratio ** (position - 1), "Progressão geométrica");
+    }
+
+    if (kind === "function") {
+      const a = randomInt(1, 5);
+      const b = randomInt(-8, 8);
+      const c = randomInt(-9, 9);
+      const x = randomInt(-4, 6);
+      const y = a * x * x + b * x + c;
+      return createProblem(`Se y = ${a}x² ${signedTerm(b)}x ${signedTerm(c)} e x = ${formatNumber(x)}, qual é y?`, y, "Função quadrática", { allowNegative: true });
+    }
+
+    if (kind === "trigonometry") {
+      const sides = pick([[3, 4, 5], [6, 8, 10], [9, 12, 15]]);
+      const sine = pick([true, false]);
+      return createProblem(`${sine ? "sen" : "cos"} de um ângulo com cateto oposto ${sides[0]} e adjacente ${sides[1]}`, (sine ? sides[0] : sides[1]) / sides[2], "Trigonometria");
+    }
+
+    if (kind === "pythagoras") {
+      const sides = pick([[3, 4, 5], [5, 12, 13], [6, 8, 10], [8, 15, 17], [7, 24, 25], [9, 12, 15]]);
+      if (pick([true, false])) return createProblem(`Hipotenusa de um triângulo com catetos ${sides[0]} e ${sides[1]}`, sides[2], "Pitágoras");
+      return createProblem(`Cateto faltante: hipotenusa ${sides[2]} e cateto ${sides[0]}`, sides[1], "Pitágoras");
+    }
+
+    const radius = randomInt(2, 6);
+    const height = randomInt(3, 9);
+    return createProblem(`Volume de um cilindro de raio ${radius} e altura ${height} (use π = 3)`, 3 * radius * radius * height, "Volume");
   }
 
   function buildStars() {

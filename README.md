@@ -1,6 +1,8 @@
 # O Grimório dos Números
 
-RPG de matemática para estudantes do 1º ao 6º ano. Cada conta certa é um feitiço: atravesse as constelações, vença os guardiões e devolva a luz à Coroa Astral.
+RPG de matemática para estudantes do 1º ao 9º ano. Cada conta certa é um feitiço: atravesse as constelações, vença os guardiões e devolva a luz à Coroa Astral.
+
+Os conteúdos acompanham os anos escolares: operações e tabuadas (1º ao 4º), porcentagem e inteiros (5º e 6º), frações e regra de três (7º), potências e funções (8º) e equações do 2º grau, progressões e trigonometria (9º).
 
 ## Como jogar
 
