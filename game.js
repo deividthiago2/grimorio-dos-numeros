@@ -72,9 +72,9 @@
     {
       id: 9,
       label: "9º ano",
-      skills: "Equações do 2º grau, progressões e trigonometria",
-      blurb: "Bhaskara, PA e PG, Pitágoras e trigonometria.",
-      levels: ["Equações do 2º grau", "PA, PG e funções", "Trigonometria e volumes"]
+      skills: "Equações do 2º grau, funções e estatística",
+      blurb: "Bhaskara, funções, sistemas e médias.",
+      levels: ["Equações e estatística", "Sistemas e funções", "Funções e geometria"]
     }
   ];
 
@@ -634,10 +634,10 @@
 
   function generateNinthGrade(difficulty) {
     const kinds = difficulty === 1
-      ? ["quadratic", "roots", "pa", "pythagoras"]
+      ? ["quadratic", "roots", "inequality", "pythagoras", "statistics"]
       : difficulty === 2
-        ? ["quadratic", "pa", "pg", "function"]
-        : ["trigonometry", "pythagoras", "pg", "cylinder"];
+        ? ["quadratic", "statistics", "system", "function", "inequality"]
+        : ["function", "vertex", "system", "probability", "cylinder", "pythagoras"];
     const kind = pick(kinds);
 
     if (kind === "quadratic") {
@@ -661,18 +661,33 @@
       return createProblem(`Maior raiz de x² ${signedTerm(b)}x ${signedTerm(c)} = 0`, Math.max(first, second), "Bhaskara");
     }
 
-    if (kind === "pa") {
-      const first = randomInt(1, 12);
-      const difference = randomInt(2, 6);
-      const position = randomInt(6, 12);
-      return createProblem(`${position}º termo da PA ${first}, ${first + difference}, ${first + 2 * difference}, ...`, first + (position - 1) * difference, "Progressão aritmética");
+    if (kind === "statistics") {
+      const count = randomInt(4, 6);
+      const values = [];
+      let sum = 0;
+      for (let i = 0; i < count; i += 1) {
+        const value = randomInt(2, 12);
+        values.push(value);
+        sum += value;
+      }
+      const adjustment = (count - (sum % count)) % count;
+      values[count - 1] += adjustment;
+      sum += adjustment;
+      return createProblem(`Média de ${values.join(", ")}`, sum / count, "Estatística");
     }
 
-    if (kind === "pg") {
-      const first = randomInt(1, 5);
-      const ratio = randomInt(2, 4);
-      const position = randomInt(4, 6);
-      return createProblem(`${position}º termo da PG ${first}, ${first * ratio}, ...`, first * ratio ** (position - 1), "Progressão geométrica");
+    if (kind === "system") {
+      const x = randomInt(-6, 10);
+      const y = randomInt(-6, 10);
+      return createProblem(`Se x + y = ${formatNumber(x + y)} e x − y = ${formatNumber(x - y)}, qual é x?`, x, "Sistema de equações", { allowNegative: true });
+    }
+
+    if (kind === "inequality") {
+      const a = randomInt(2, 6);
+      const b = randomInt(-8, 8);
+      const answer = randomInt(-5, 8);
+      const limit = a * answer + b + randomInt(1, a);
+      return createProblem(`Maior x inteiro com ${a}x ${signedTerm(b)} < ${formatNumber(limit)}`, answer, "Inequação", { allowNegative: true });
     }
 
     if (kind === "function") {
@@ -684,10 +699,18 @@
       return createProblem(`Se y = ${a}x² ${signedTerm(b)}x ${signedTerm(c)} e x = ${formatNumber(x)}, qual é y?`, y, "Função quadrática", { allowNegative: true });
     }
 
-    if (kind === "trigonometry") {
-      const sides = pick([[3, 4, 5], [6, 8, 10], [9, 12, 15]]);
-      const sine = pick([true, false]);
-      return createProblem(`${sine ? "sen" : "cos"} de um ângulo com cateto oposto ${sides[0]} e adjacente ${sides[1]}`, (sine ? sides[0] : sides[1]) / sides[2], "Trigonometria");
+    if (kind === "vertex") {
+      const a = randomInt(1, 4);
+      const answer = randomInt(1, 5) * pick([-1, 1]);
+      const b = -2 * a * answer;
+      const c = randomInt(-8, 8);
+      return createProblem(`Abscissa do vértice de y = ${a}x² ${signedTerm(b)}x ${signedTerm(c)}`, answer, "Vértice da parábola");
+    }
+
+    if (kind === "probability") {
+      const total = randomInt(4, 12) * 2;
+      const favorable = randomInt(1, total - 1);
+      return createProblem(`Em ${total} bolas, ${favorable} são azuis. Chance em %?`, roundTo((favorable / total) * 100, 1), "Probabilidade");
     }
 
     if (kind === "pythagoras") {
